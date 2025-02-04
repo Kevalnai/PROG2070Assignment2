@@ -8,6 +8,9 @@ namespace PROG2070Assignment2
 {
     public class Product
     {
-        
+        public Product()
+        {
+            
+        }
     }
 }
