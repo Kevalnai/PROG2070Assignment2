@@ -2,7 +2,7 @@ using PROG2070Assignment2;
 
 namespace PROG2070Assignment2UnitTests
 {
-    public class ProductTests
+    public class ProductTest
     {
         private Product testProduct;
 
@@ -17,7 +17,7 @@ namespace PROG2070Assignment2UnitTests
          * - Kuolung Cheng
          */
         [Test]
-        public void ProdId_Input123_Valid()
+        public void SetProdId_Input123_Valid()
         {
             // Arrange
             int input = 123;
@@ -36,7 +36,7 @@ namespace PROG2070Assignment2UnitTests
          * - Kuolung Cheng
          */
         [Test]
-        public void ProdId_Input4_Invalid()
+        public void SetProdId_Input4_Invalid()
         {
             // Arrange
             int input = 4;
@@ -54,7 +54,7 @@ namespace PROG2070Assignment2UnitTests
          * - Kuolung Cheng
          */
         [Test]
-        public void ProdId_Input50001_Invalid()
+        public void SetProdId_Input50001_Invalid()
         {
             // Arrange
             int input = 50001;
@@ -68,17 +68,17 @@ namespace PROG2070Assignment2UnitTests
         }
 
         /* 
-         * Verify that IncreaseStock method works correctly for valid inputs (stock: 123, amount: 456)
+         * Verify that IncreaseStock method works correctly for valid inputs (stock: 500000, amount: 0)
          * - Kuolung Cheng
          */
         [Test]
-        public void IncreaseStock_Input123And456_Valid()
+        public void IncreaseStock_Input500000And0_Valid()
         {
             // Arrange
-            int stock = 123;
-            int amount = 456;
+            int stock = 500000;
+            int amount = 0;
             testProduct.StockAmount = stock;
-            int expected = 579;
+            int expected = 500000;
 
             // Act
             testProduct.IncreaseStock(amount);
@@ -130,7 +130,6 @@ namespace PROG2070Assignment2UnitTests
             Assert.That(actual.Message, Is.EqualTo(expected));
         }
 
-
         /*
          * Testing the valid decrease in the stock amount
          * - Keval Nai
@@ -146,14 +145,15 @@ namespace PROG2070Assignment2UnitTests
             stock.DecreaseStock(95); // Decrease by 95.
 
             // Assert
-            Assert.AreEqual(5, stock.StockAmount); // Stock should be 5 after the decrease.
+            Assert.That(stock.StockAmount, Is.EqualTo(5)); // Stock should be 5 after the decrease.
         }
+
         /*
-         * Testing the invalid input for the decrease method 
+         * Testing that the decrease amount should not below minimum stock 
          * - KevalNai
          */
         [Test]
-        public void DecreaseStock_InvalidAmount()
+        public void DecreaseStock_InvalidAmount_ShouldNotBelowMinStock()
         {
             // Arrange
             var stock = new Product();
@@ -166,46 +166,45 @@ namespace PROG2070Assignment2UnitTests
             // Assert 
             Assert.That(actual.Message, Does.Contain("Stock amount must be between 5 and 500000"));  // Verify exception message
         }
+
         /*
-         *  This test case checkthat the decrease amoutn should not exceed maximum stock 
+         *  Testing that the decrease amount should not exceed maximum stock 
          *  - Keval Nai
          */
-
         [Test]
-        public void DecreaseStock_ValidAmount_ShouldNotExceedMaxStock()
+        public void DecreaseStock_InvalidAmount_ShouldNotExceedMaxStock()
         {
             // Arrange
             var stock = new Product();  // Create a new product instance.
             stock.StockAmount = 500000;  // Set the initial stock amount to the maximum valid value.
-
-            // Act & Assert
-            // No exception should be thrown when decreasing by 0 (just testing the boundary).
-            stock.DecreaseStock(0);  // Stock should remain the same.
-            Assert.AreEqual(500000, stock.StockAmount);  // Verify that the stock is still 500000.
-        }
-
-
-        /*
-         * this test cases check the large amount of stock is decreased by the  very large number 
-         * - Keval Nai
-        */
-        [Test]
-        public void DecreaseStock_LargeAmount_ShouldDecreaseCorrectly()
-        {
-            // Arrange
-            var stock = new Product();  // Create a new product instance.
-            stock.StockAmount = 500000;  // Initial stock amount = 500000.
+            int amount = -10;  // Amount to decrease the stock by, which will make stock 500010 (exceed maximum 500000)
 
             // Act
-            stock.DecreaseStock(50000);  // Decrease stock by 50,000.
+            var actual = Assert.Throws<ArgumentException>(() => stock.DecreaseStock(amount));  // Decrease by -10, expecting exception
 
-            // Assert
-            Assert.AreEqual(450000, stock.StockAmount);  // Stock should be 450,000 after the decrease.
+            // Assert 
+            Assert.That(actual.Message, Does.Contain("Stock amount must be between 5 and 500000"));  // Verify exception message
         }
 
+        /*
+         * Testing the stock amount set to minimum limit (5) should be okay
+         * - Keval Nai
+         */
+        [Test]
+        public void SetStockAmount_MinimumValidPrice_ShouldSetStockAmountTo5()
+        {
+            // Arrange
+            var product = new Product();  // Create a new product instance.
+
+            // Act
+            product.StockAmount = 5;  // Set the stock amount to the minimum valid value (5).
+
+            // Assert
+            Assert.That(product.StockAmount, Is.EqualTo(5));  // The stock amount should be exactly 5 after setting.
+        }
 
         /*
-         * this test case the the check the item price set to minimum limit (5)
+         * Testing the check the item price set to minimum limit (5) should be okay
          * - Keval Nai
          */
         [Test]
@@ -218,10 +217,11 @@ namespace PROG2070Assignment2UnitTests
             product.ItemPrice = 5;  // Set the item price to the minimum valid value (5).
 
             // Assert
-            Assert.AreEqual(5, product.ItemPrice);  // The price should be exactly 5 after setting.
+            Assert.That(product.ItemPrice, Is.EqualTo(5));  // The price should be exactly 5 after setting.
         }
+
         /*
-         * this test case the the check the item price set to maximum limit (5000)
+         * Testing the item price set to maximum limit (5000) should be okay
          * - Keval Nai
          */
         [Test]
@@ -234,13 +234,11 @@ namespace PROG2070Assignment2UnitTests
             product.ItemPrice = 5000;  // Set the item price to the maximum valid value (5000).
 
             // Assert
-            Assert.AreEqual(5000, product.ItemPrice);  // The price should be exactly 5000 after setting.
+            Assert.That(product.ItemPrice, Is.EqualTo(5000));  // The price should be exactly 5000 after setting.
         }
 
-
-
         /*
-        * this test case the the check the item price(50) can be set successfully
+        * this test case check the item price (50) can be set successfully
         * -Zixiao Zhou
         */
         [Test]
@@ -258,79 +256,10 @@ namespace PROG2070Assignment2UnitTests
             Assert.That(actual, Is.EqualTo(expected));
         }
 
-        /* 
-        * Verify that setting a Item Price (4) below the minimum value (5) will throw an exception
-        * -Zixiao Zhou
-        */
-        [Test]
-        public void SetItemPrice_Input4_Invalid()
-        {
-            // Arrange
-            int input = 4;
-            string expected = "Item Price must be between 5 and 5000";
-
-            // Act
-            var actual = Assert.Throws<ArgumentException>(() => testProduct.ItemPrice = input);
-
-            // Assert
-            Assert.That(actual.Message, Is.EqualTo(expected));
-        }
-
-        /* 
-         * Verify that setting a Item Price (5001) above the maximum value (5000) will throw an exception
+        /*
+         * this test case check the Stock Amount (50) can be set successfully
          * - Zixiao Zhou
          */
-        [Test]
-        public void SetItemPrice_Input50001_Invalid()
-        {
-            // Arrange
-            int input = 5001;
-            string expected = "Item Price must be between 5 and 5000";
-
-            // Act
-            var actual = Assert.Throws<ArgumentException>(() => testProduct.ItemPrice = input);
-
-            // Assert
-            Assert.That(actual.Message, Is.EqualTo(expected));
-        }
-
-        /*
-         * this test case the the check the Product id set to minimum limit (5)
-         * - Zixiao Zhou
-         */
-        [Test]
-        public void SetProdId_MinimumValidId_ShouldSetPriceTo5()
-        {
-            // Arrange
-            var product = new Product();  // Create a new product instance.
-
-            // Act
-            product.ProdId = 5;  // Set the id to the minimum valid value (5).
-
-            // Assert
-            Assert.AreEqual(5, product.ProdId);  // The id should be exactly 5 after setting.
-        }
-        /*
-         *this test case the the check the Product id set to maximum limit (50000)
-         * - Zixiao Zhou
-         */
-        [Test]
-        public void SetProdId_MaximumValidId_ShouldSetPriceTo50000()
-        {
-            // Arrange
-            var product = new Product();  // Create a new product instance.
-
-            // Act
-            product.ProdId = 50000;  // Set the item price to the maximum valid value (5000).
-
-            // Assert
-            Assert.AreEqual(5000, product.ProdId);  // The id should be exactly 5000 after setting.
-        }
-
-        /*
-        * this test case the the check the Stock Amount(50) can be set successfully
-        * -Zixiao Zhou
-        */
         [Test]
         public void SetStockAmount_ValidAmount_ShouldSetAmount50()
         {
@@ -346,5 +275,80 @@ namespace PROG2070Assignment2UnitTests
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        /*
+         * Testing the stock amount set to maximum limit (500000) should be okay
+         * - Zixiao Zhou
+         */
+        [Test]
+        public void SetStockAmount_MaximumValidPrice_ShouldSetStockAmountTo500000()
+        {
+            // Arrange
+            var product = new Product();
+
+            // Act
+            product.StockAmount = 500000;
+
+            // Assert
+            Assert.That(product.StockAmount, Is.EqualTo(500000));
+        }
+
+        /*
+         * Testing that the increase amount should not below minimum stock 
+         * - Zixiao Zhou
+         */
+        [Test]
+        public void IncreaseStock_InvalidAmount_ShouldNotBelowMinStock()
+        {
+            // Arrange
+            var stock = new Product();
+            stock.StockAmount = 10;
+            int amount = -15;
+
+            // Act
+            var actual = Assert.Throws<ArgumentException>(() => stock.IncreaseStock(amount));
+
+            // Assert 
+            Assert.That(actual.Message, Does.Contain("Stock amount must be between 5 and 500000"));
+        }
+
+        /*
+         *  Testing that the increase amount should not exceed maximum stock 
+         *  - Zixiao Zhou
+         */
+        [Test]
+        public void IncreaseStock_InvalidAmount_ShouldNotExceedMaxStock()
+        {
+            // Arrange
+            var stock = new Product();
+            stock.StockAmount = 400000;
+            int amount = 100001;
+
+            // Act
+            var actual = Assert.Throws<ArgumentException>(() => stock.IncreaseStock(amount));
+
+            // Assert 
+            Assert.That(actual.Message, Does.Contain("Stock amount must be between 5 and 500000"));
+        }
+
+        /*
+         * Testing the valid decrease in the stock amount
+         * - Zixiao Zhou
+         * */
+        [Test]
+        public void DecreaseStock_Input5And0_Valid()
+        {
+            // Arrange
+            int stock = 5;
+            int amount = 0;
+            testProduct.StockAmount = stock;
+            int expected = 5;
+
+            // Act
+            testProduct.DecreaseStock(amount);
+            int actual = testProduct.StockAmount;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
     }
 }
