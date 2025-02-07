@@ -50,7 +50,7 @@ namespace PROG2070Assignment2UnitTests
         }
 
         /* 
-         * Verify that setting a product ID (50001) above the minimum value (50000) will throw an exception
+         * Verify that setting a product ID (50001) above the maximum value (50000) will throw an exception
          * - Kuolung Cheng
          */
         [Test]
@@ -235,6 +235,115 @@ namespace PROG2070Assignment2UnitTests
 
             // Assert
             Assert.AreEqual(5000, product.ItemPrice);  // The price should be exactly 5000 after setting.
+        }
+
+
+
+        /*
+        * this test case the the check the item price(50) can be set successfully
+        * -Zixiao Zhou
+        */
+        [Test]
+        public void SetItemPrice_ValidPrice_Valid()
+        {
+            // Arrange
+            double input = 50;
+            double expected = 50;
+
+            // Act
+            testProduct.ItemPrice = input;
+            double actual = testProduct.ItemPrice;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        /* 
+        * Verify that setting a Item Price (4) below the minimum value (5) will throw an exception
+        * -Zixiao Zhou
+        */
+        [Test]
+        public void SetItemPrice_Input4_Invalid()
+        {
+            // Arrange
+            int input = 4;
+            string expected = "Item Price must be between 5 and 5000";
+
+            // Act
+            var actual = Assert.Throws<ArgumentException>(() => testProduct.ItemPrice = input);
+
+            // Assert
+            Assert.That(actual.Message, Is.EqualTo(expected));
+        }
+
+        /* 
+         * Verify that setting a Item Price (5001) above the maximum value (5000) will throw an exception
+         * - Zixiao Zhou
+         */
+        [Test]
+        public void SetItemPrice_Input50001_Invalid()
+        {
+            // Arrange
+            int input = 5001;
+            string expected = "Item Price must be between 5 and 5000";
+
+            // Act
+            var actual = Assert.Throws<ArgumentException>(() => testProduct.ItemPrice = input);
+
+            // Assert
+            Assert.That(actual.Message, Is.EqualTo(expected));
+        }
+
+        /*
+         * this test case the the check the Product id set to minimum limit (5)
+         * - Zixiao Zhou
+         */
+        [Test]
+        public void SetProdId_MinimumValidId_ShouldSetPriceTo5()
+        {
+            // Arrange
+            var product = new Product();  // Create a new product instance.
+
+            // Act
+            product.ProdId = 5;  // Set the id to the minimum valid value (5).
+
+            // Assert
+            Assert.AreEqual(5, product.ProdId);  // The id should be exactly 5 after setting.
+        }
+        /*
+         *this test case the the check the Product id set to maximum limit (50000)
+         * - Zixiao Zhou
+         */
+        [Test]
+        public void SetProdId_MaximumValidId_ShouldSetPriceTo50000()
+        {
+            // Arrange
+            var product = new Product();  // Create a new product instance.
+
+            // Act
+            product.ProdId = 50000;  // Set the item price to the maximum valid value (5000).
+
+            // Assert
+            Assert.AreEqual(5000, product.ProdId);  // The id should be exactly 5000 after setting.
+        }
+
+        /*
+        * this test case the the check the Stock Amount(50) can be set successfully
+        * -Zixiao Zhou
+        */
+        [Test]
+        public void SetStockAmount_ValidAmount_ShouldSetAmount50()
+        {
+            // Arrange
+            int input = 50;
+            int expected = 50;
+
+            // Act
+            testProduct.StockAmount = input;
+            double actual = testProduct.StockAmount;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
     }
