@@ -129,5 +129,20 @@ namespace PROG2070Assignment2UnitTests
             // Assert
             Assert.That(actual.Message, Is.EqualTo(expected));
         }
+
+        [Test]
+        
+        public void DecreaseStock_ValidAmount_ShouldDecreaseStock()
+        {
+            // Arrange
+            var stock = new Product();  // Assume ProductStock has a StockAmount property.
+            stock.StockAmount = 100; // Initial stock amount.
+
+            // Act
+            stock.DecreaseStock(95); // Decrease by 95.
+
+            // Assert
+            Assert.AreEqual(5, stock.StockAmount); // Stock should be 5 after the decrease.
+        }
     }
 }

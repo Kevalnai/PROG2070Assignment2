@@ -114,5 +114,7 @@
 
             StockAmount -= amount;
         }
+
+
     }
 }
